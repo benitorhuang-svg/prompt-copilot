@@ -6,87 +6,506 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#3b82f6">
     <title>Prompt Copilot Pro V1 | Three-Column Workspace</title>
-    <link rel="manifest" href="/manifest.webmanifest">
-    <!-- Fonts -->
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icons/icon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
     <style>
-        :root { --primary: #3b82f6; --primary-hover: #2563eb; --primary-soft: rgba(59,130,246,0.1); --bg-body: #f8fafc; --bg-card: #ffffff; --bg-panel: #f1f5f9; --bg-input: #ffffff; --text-main: #0f172a; --text-muted: #64748b; --border: #e2e8f0; --header-gradient: linear-gradient(135deg,#1e293b 0%,#0f172a 100%); --radius-md: 12px; --radius-lg: 16px; --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1); }
-        [data-theme="dark"] { --primary: #60a5fa; --primary-hover: #3b82f6; --primary-soft: rgba(96,165,250,0.15); --bg-body: #020617; --bg-card: #0f172a; --bg-panel: #020617; --bg-input: #1e293b; --text-main: #f1f5f9; --text-muted: #94a3b8; --border: #334155; --header-gradient: linear-gradient(135deg,#000000 0%,#1e293b 100%); }
-        * { box-sizing: border-box; margin: 0; padding: 0; transition: background-color 0.2s, border-color 0.2s; }
-        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-        header { background: var(--header-gradient); color: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
-        .header-search-box { position: relative; width: 200px; margin-left: 24px; margin-right: auto; }
-        header .header-search-box input { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding-left: 36px; height: 38px; border-radius: 8px; }
-        header .header-search-box input:focus { background: rgba(255,255,255,0.15); border-color: var(--primary); }
-        header .header-search-box input::placeholder { color: rgba(255,255,255,0.5); }
-        .header-search-box .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.6); pointer-events: none; }
-        .header-lang { display: flex; background: rgba(255,255,255,0.1); border-radius: 8px; padding: 3px; margin-left: 8px; }
-        header .header-select { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 5px 8px; border-radius: 6px; font-size: 12px; outline: none; height: 32px; margin-left: 12px; min-width: 140px; }
-        header .header-select option { background-color: #1e293b !important; color: white !important; }
-        header .header-lang .lang-btn { border: none; background: transparent; color: rgba(255,255,255,0.6); padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; }
-        header .header-lang .lang-btn.active { background: rgba(255,255,255,0.2); color: white; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        header .header-lang .lang-btn:hover:not(.active) { color: white; }
-        .brand h1 { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-        .brand .version { font-size: 10px; background: var(--primary); padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
-        .header-tools { display: flex; align-items: center; gap: 16px; flex-shrink: 0; white-space: nowrap; }
-        .status-container { font-size: 12px; background: rgba(0,0,0,0.3); padding: 6px 12px; border-radius: 20px; display: flex; align-items: center; }
-        .status-dot { width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; box-shadow: 0 0 8px currentColor; }
-        .btn-icon { background: rgba(255,255,255,0.1); border: none; color: white; padding: 7px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; }
-        .btn-icon:hover { background: rgba(255,255,255,0.2); }
-        .btn-refresh.spinning svg { animation: spin 0.8s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .main-grid { display: grid; grid-template-columns: 320px 1fr 430px; flex-grow: 1; background: var(--border); gap: 1px; }
-        .col { background: var(--bg-card); display: flex; flex-direction: column; min-height: calc(100vh - 60px); }
-        .col-header { padding: 16px 20px; border-bottom: 1px solid var(--border); background: var(--bg-card); display: flex; justify-content: space-between; align-items: center; }
-        .col-header h2 { font-size: 13px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-        .scroll-area { flex-grow: 1; overflow-y: auto; padding: 20px; }
-        .lang-switch { display: grid; grid-template-columns: 1fr 1fr; background: var(--bg-panel); padding: 4px; border-radius: 8px; margin-bottom: 16px; }
-        .lang-btn { border: none; background: transparent; padding: 6px; font-size: 12px; border-radius: 4px; cursor: pointer; color: var(--text-muted); font-weight: 600; }
-        .lang-btn.active { background: var(--bg-card); color: var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .field-group { margin-bottom: 16px; }
-        label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; color: var(--text-muted); }
-        select, input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-panel); color: var(--text-main); font-size: 13px; outline: none; }
-        select:focus, input:focus { border-color: var(--primary); background: var(--bg-card); }
-        .search-box { position: relative; margin-bottom: 12px; }
-        .search-box input { padding-left: 32px; background: var(--bg-panel); }
-        .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
-        .task-list { display: flex; flex-direction: column; gap: 4px; border: 1px solid var(--border); border-radius: 8px; padding: 4px; height: 100%; min-height: 200px; }
-        .task-item { padding: 9px 12px; border-radius: 6px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
-        .task-item:hover { background: var(--bg-panel); }
-        .task-item.active { background: var(--primary); color: white; font-weight: 600; }
-        .accordion-item { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
-        .accordion-header { padding: 14px; background: var(--bg-card); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .accordion-header .label { font-size: 13px; font-weight: 700; }
-        .accordion-header .summary { font-size: 11px; color: var(--primary); max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0.8; }
-        .accordion-icon { transition: transform 0.3s; color: var(--text-muted); }
-        .accordion-item.active { border-color: var(--primary); }
-        .accordion-item.active .accordion-icon { transform: rotate(180deg); color: var(--primary); }
-        .accordion-content { max-height: 0; overflow: hidden; background: var(--bg-panel); transition: all 0.3s ease; }
-        .accordion-item.active .accordion-content { max-height: 800px; padding: 16px; border-top: 1px solid var(--border); }
-        .multi-select-container { display: flex; flex-wrap: wrap; gap: 6px; }
-        .chip { padding: 5px 12px; background: var(--bg-card); border-radius: 20px; font-size: 11px; cursor: pointer; border: 1px solid var(--border); }
-        .chip.selected { background: var(--primary); color: white; border-color: var(--primary); }
-        .right-col { background: var(--bg-panel); padding: 0 !important; position: sticky; top: 0; height: calc(100vh - 60px); z-index: 6; }
-        .result-panel { height: 100%; display: flex; flex-direction: column; }
-        .textarea-box { flex-grow: 1; position: relative; padding: 20px; }
-        textarea { width: 100%; height: 100%; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-card); color: var(--text-main); font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.6; padding: 20px; resize: none; outline: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
-        .action-footer { padding: 16px 20px; background: var(--bg-card); border-bottom: 1px solid var(--border); }
-        .btn-copy { width: 100%; padding: 14px; background: #4ade80; color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; }
-        .btn-copy:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(80,217,112,0.4); }
-        .btn-copy.success { background: #10b981; }
-        #loader { position: fixed; inset: 0; background: var(--bg-body); z-index: 1000; display: flex; justify-content: center; align-items: center; }
-        .spinner { width: 40px; height: 40px; border: 4px solid var(--primary-soft); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        :root {
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --primary-soft: rgba(59, 130, 246, 0.1);
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-panel: #f1f5f9;
+            --bg-input: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --header-gradient: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+
+        [data-theme="dark"] {
+            --primary: #60a5fa;
+            --primary-hover: #3b82f6;
+            --primary-soft: rgba(96, 165, 250, 0.15);
+            --bg-body: #020617;
+            --bg-card: #0f172a;
+            --bg-panel: #020617;
+            --bg-input: #1e293b;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --header-gradient: linear-gradient(135deg, #000000 0%, #1e293b 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        header {
+            background: var(--header-gradient);
+            color: white;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .header-search-box {
+            position: relative;
+            width: 200px;
+            margin-left: 24px;
+            margin-right: auto;
+        }
+
+        header .header-search-box input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding-left: 36px;
+            height: 38px;
+            border-radius: 8px;
+        }
+
+        header .header-search-box input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--primary);
+        }
+
+        header .header-search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .header-search-box .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.6);
+            pointer-events: none;
+        }
+
+        .header-lang {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 3px;
+            margin-left: 8px;
+        }
+
+        header .header-select {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 5px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            outline: none;
+            height: 32px;
+            margin-left: 12px;
+            min-width: 140px;
+        }
+
+        header .header-select option {
+            background-color: #1e293b !important;
+            color: white !important;
+        }
+
+        header .header-lang .lang-btn {
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 5px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        header .header-lang .lang-btn.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        header .header-lang .lang-btn:hover:not(.active) {
+            color: white;
+        }
+
+        .brand h1 {
+            font-size: 20px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand .version {
+            font-size: 10px;
+            background: var(--primary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .header-tools {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .status-container {
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            margin-right: 6px;
+            box-shadow: 0 0 8px currentColor;
+        }
+
+        .btn-icon {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 7px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-refresh.spinning svg {
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr 430px;
+            flex-grow: 1;
+            background: var(--border);
+            gap: 1px;
+        }
+
+        .col {
+            background: var(--bg-card);
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 60px);
+        }
+
+        .scroll-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .field-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-panel);
+            color: var(--text-main);
+            font-size: 13px;
+            outline: none;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: var(--primary);
+            background: var(--bg-card);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 4px;
+            height: 100%;
+            min-height: 200px;
+        }
+
+        .task-item {
+            padding: 9px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-main);
+        }
+
+        .task-item:hover {
+            background: var(--bg-panel);
+        }
+
+        .task-item.active {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .accordion-item {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            padding: 14px;
+            background: var(--bg-card);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .accordion-header .label {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .accordion-header .summary {
+            font-size: 11px;
+            color: var(--primary);
+            max-width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            opacity: 0.8;
+        }
+
+        .accordion-icon {
+            transition: transform 0.3s;
+            color: var(--text-muted);
+        }
+
+        .accordion-item.active {
+            border-color: var(--primary);
+        }
+
+        .accordion-item.active .accordion-icon {
+            transform: rotate(180deg);
+            color: var(--primary);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            background: var(--bg-panel);
+            transition: all 0.3s ease;
+        }
+
+        .accordion-item.active .accordion-content {
+            max-height: 800px;
+            padding: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .multi-select-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .chip {
+            padding: 5px 12px;
+            background: var(--bg-card);
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+            border: 1px solid var(--border);
+        }
+
+        .chip.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .right-col {
+            background: var(--bg-panel);
+            padding: 0 !important;
+            position: sticky;
+            top: 0;
+            height: calc(100vh - 60px);
+            z-index: 6;
+        }
+
+        .result-panel {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .textarea-box {
+            flex-grow: 1;
+            position: relative;
+            padding: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100%;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg-card);
+            color: var(--text-main);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 20px;
+            resize: none;
+            outline: none;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .action-footer {
+            padding: 16px 20px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .btn-copy {
+            width: 100%;
+            padding: 14px;
+            background: #4ade80;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+
+        .btn-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(80, 217, 112, 0.4);
+        }
+
+        .btn-copy.success {
+            background: #10b981;
+        }
+
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-body);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--primary-soft);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @media (max-width: 1100px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .right-col {
+                position: static;
+                height: auto;
+            }
+
+            .result-panel {
+                min-height: 420px;
+            }
+        }
     </style>
 </head>
 
 <body data-theme="light">
-    <!-- Loader -->
     <div id="loader">
         <div class="spinner"></div>
     </div>
@@ -96,7 +515,8 @@
             <h1>Prompt Copilot <span class="version">V1 Pro</span></h1>
         </div>
         <div class="header-search-box">
-            <span class="search-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <span class="search-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2.5">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg></span>
@@ -132,23 +552,28 @@
                     <label id="lbl-lib">Library Source</label>
                     <select id="lib-select"></select>
                 </div>
+
                 <div class="field-group">
                     <label id="lbl-role">Category</label>
                     <select id="role-select"></select>
                 </div>
+
                 <div class="field-group" style="flex-grow: 1; display: flex; flex-direction: column;">
                     <div class="task-list scroll-area" id="task-container" style="padding: 4px;"></div>
                 </div>
             </div>
         </section>
+
         <section class="col">
             <div class="scroll-area" id="dynamic-inputs"></div>
         </section>
+
         <section class="col right-col">
             <div class="result-panel">
                 <div class="action-footer">
                     <button class="btn-copy" id="copy-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
                             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                         </svg>
@@ -156,21 +581,395 @@
                     </button>
                 </div>
                 <div class="textarea-box">
-                    <textarea id="result-text" spellcheck="false" placeholder="Your generated prompt will appear here..."></textarea>
+                    <textarea id="result-text" spellcheck="false"
+                        placeholder="Your generated prompt will appear here..."></textarea>
                 </div>
             </div>
         </section>
     </main>
 
     <script>
-        /* The original app script is intentionally unchanged — it will load data from remote indexes.
-           The service worker registration is below so this becomes a PWA. */
+        const BASE_PATH = location.pathname.replace(/[^/]*$/, '');
+        const DATA_MANIFEST_PATH = new URL('data/manifest.json', location.href).toString();
+        const INDEX_URLS = {
+            zh: 'https://gist.githubusercontent.com/weihua-studio/051d3a6a6a50ef1690166b9502212c5e/raw/1562b13f01211aba547b6c2f503676f2cf1ea6b1/library_index.json',
+            en: 'https://gist.githubusercontent.com/weihua-studio/07ca630b76a6e93f26367df8112c248f/raw/2434214848fc1dab76fdc36e0d7e143355acdc0c/library_index_GlobalWorld.json'
+        };
+
+        const UI = {
+            zh: {
+                lbl_nav: '導航', lbl_params: '參數設定',
+                lbl_lib: '📚 模組庫來源', lbl_role: '📂 類別目錄', lbl_task: '⚡ 任務導航', lbl_result: '📜 生成結果',
+                btn_copy: '複製 Prompt', btn_copied: '已複製! ✅', status_online: '🟢 連線正常', status_offline: '🔴 離線中',
+                search_placeholder: '搜尋任務...', no_results: '無數據',
+                title_refresh: '重新加載', title_theme: '切換主題',
+                modes: [{ label: '🚀 預設', prefix: '' }, { label: '🐍 代碼', prefix: '【系統提示】：只輸出代碼。\n\n' }]
+            },
+            en: {
+                lbl_nav: 'Navigation', lbl_params: 'Parameters',
+                lbl_lib: '📚 Library', lbl_role: '📂 Category', lbl_task: '⚡ Tasks', lbl_result: '📜 Preview',
+                btn_copy: 'Copy Prompt', btn_copied: 'Copied! ✅', status_online: '🟢 Online', status_offline: '🔴 Offline',
+                search_placeholder: 'Search tasks...', no_results: 'No items',
+                title_refresh: 'Reload Data', title_theme: 'Toggle Theme',
+                modes: [{ label: '🚀 Default', prefix: '' }, { label: '🐍 Code Only', prefix: 'SYSTEM: Output Code only.\n\n' }]
+            }
+        };
+
+        let state = {
+            lang: localStorage.getItem('cp_lang') || 'zh',
+            theme: localStorage.getItem('cp_theme') || 'light',
+            libraries: {},
+            rolesData: {},
+            selectedLib: '',
+            selectedRole: '',
+            selectedTask: '',
+            modePrefix: '',
+            vars: {},
+            searchQuery: '',
+            dataManifest: null
+        };
+
+        const $E = {
+            lib: document.getElementById('lib-select'),
+            role: document.getElementById('role-select'),
+            taskContainer: document.getElementById('task-container'),
+            taskSearch: document.getElementById('task-search'),
+            mode: document.getElementById('mode-select'),
+            dynamic: document.getElementById('dynamic-inputs'),
+            result: document.getElementById('result-text'),
+            copy: document.getElementById('copy-btn'),
+            theme: document.getElementById('theme-toggle'),
+            status: document.getElementById('connection-status'),
+            loader: document.getElementById('loader')
+        };
+
+        async function fetchJson(url, fallbackUrl) {
+            try {
+                const response = await fetch(url, { cache: 'no-store' });
+                if (!response.ok) {
+                    throw new Error(`Fetch failed: ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                if (!fallbackUrl) {
+                    throw error;
+                }
+                const response = await fetch(fallbackUrl, { cache: 'no-store' });
+                if (!response.ok) {
+                    throw new Error(`Fallback fetch failed: ${response.status}`);
+                }
+                return await response.json();
+            }
+        }
+
+        async function loadDataManifest() {
+            try {
+                state.dataManifest = await fetchJson(DATA_MANIFEST_PATH);
+            } catch (error) {
+                state.dataManifest = null;
+            }
+        }
+
+        function resolveLocalIndexPath(lang) {
+            const relativePath = state.dataManifest?.indexes?.[lang];
+            return relativePath ? new URL(relativePath, location.href).toString() : null;
+        }
+
+        function resolveLibraryUrl(rawUrl) {
+            const relativePath = state.dataManifest?.libraries?.[rawUrl];
+            return relativePath ? new URL(relativePath, location.href).toString() : rawUrl;
+        }
+
+        async function init() {
+            applyTheme(state.theme);
+            setLanguage(state.lang, false);
+            await loadDataManifest();
+
+            $E.lib.onchange = (e) => onLibraryChange(e.target.value);
+            $E.role.onchange = (e) => onRoleChange(e.target.value);
+            $E.mode.onchange = (e) => { state.modePrefix = e.target.value; updateResult(); };
+            $E.taskSearch.oninput = (e) => { state.searchQuery = e.target.value; renderTasks(); };
+            $E.theme.onclick = toggleTheme;
+            $E.copy.onclick = copyToClipboard;
+
+            await loadMasterIndex();
+            $E.loader.style.display = 'none';
+        }
+
+        function setLanguage(l, reload = true) {
+            state.lang = l;
+            localStorage.setItem('cp_lang', l);
+            document.getElementById('btn-zh').classList.toggle('active', l === 'zh');
+            document.getElementById('btn-en').classList.toggle('active', l === 'en');
+
+            const s = UI[l];
+            document.getElementById('lbl-lib').textContent = s.lbl_lib;
+            document.getElementById('lbl-role').textContent = s.lbl_role;
+            document.getElementById('btn-copy-text').textContent = s.btn_copy;
+            $E.taskSearch.placeholder = s.search_placeholder;
+            document.getElementById('refresh-btn').title = s.title_refresh;
+            document.getElementById('theme-toggle').title = s.title_theme;
+
+            $E.mode.innerHTML = '';
+            s.modes.forEach((m) => $E.mode.add(new Option(m.label, m.prefix)));
+            state.modePrefix = $E.mode.value;
+
+            if (reload) {
+                loadMasterIndex();
+            }
+        }
+
+        async function loadMasterIndex() {
+            const btn = document.getElementById('refresh-btn');
+            btn.classList.add('spinning');
+
+            const remoteUrl = INDEX_URLS[state.lang];
+            const localUrl = resolveLocalIndexPath(state.lang);
+            const cacheKey = `cp_cache_v2_${state.lang}`;
+            const cached = localStorage.getItem(cacheKey);
+            if (cached) {
+                state.libraries = JSON.parse(cached);
+                renderLibraryList();
+            }
+
+            try {
+                const data = await fetchJson(localUrl || remoteUrl, remoteUrl);
+                state.libraries = data;
+                localStorage.setItem(cacheKey, JSON.stringify(data));
+                renderLibraryList();
+                updateStatus(true);
+            } catch (error) {
+                updateStatus(false);
+            } finally {
+                btn.classList.remove('spinning');
+            }
+        }
+
+        function renderLibraryList() {
+            $E.lib.innerHTML = '';
+            Object.keys(state.libraries).forEach((name) => $E.lib.add(new Option(name, name)));
+            const saved = localStorage.getItem(`cp_last_lib_v1_${state.lang}`);
+            if (saved && state.libraries[saved]) {
+                $E.lib.value = saved;
+            }
+            onLibraryChange($E.lib.value);
+        }
+
+        async function onLibraryChange(name) {
+            if (!name) {
+                return;
+            }
+
+            state.selectedLib = name;
+            localStorage.setItem(`cp_last_lib_v1_${state.lang}`, name);
+
+            try {
+                const remoteUrl = state.libraries[name];
+                const resolvedUrl = resolveLibraryUrl(remoteUrl);
+                const data = await fetchJson(resolvedUrl, remoteUrl);
+                state.rolesData = data.roles || data;
+                renderRoles();
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        function renderRoles() {
+            $E.role.innerHTML = '';
+            Object.keys(state.rolesData).forEach((role) => $E.role.add(new Option(role, role)));
+            onRoleChange($E.role.value);
+        }
+
+        function onRoleChange(role) {
+            state.selectedRole = role;
+            renderTasks();
+        }
+
+        function renderTasks() {
+            $E.taskContainer.innerHTML = '';
+            const tasks = state.rolesData[state.selectedRole] || {};
+            const query = state.searchQuery.toLowerCase();
+            let first = null;
+
+            Object.keys(tasks).forEach((name) => {
+                if (query && !name.toLowerCase().includes(query)) {
+                    return;
+                }
+                const item = document.createElement('div');
+                item.className = 'task-item' + (name === state.selectedTask ? ' active' : '');
+                item.textContent = name;
+                item.onclick = () => selectTask(name);
+                $E.taskContainer.appendChild(item);
+                if (!first) {
+                    first = name;
+                }
+            });
+
+            if (!state.selectedTask || !tasks[state.selectedTask]) {
+                selectTask(first);
+            }
+        }
+
+        function selectTask(name) {
+            state.selectedTask = name;
+            Array.from($E.taskContainer.children).forEach((el) => el.classList.toggle('active', el.textContent === name));
+            renderDynamicInputs();
+        }
+
+        function renderDynamicInputs() {
+            $E.dynamic.innerHTML = '';
+            const roleData = state.rolesData[state.selectedRole] || {};
+            const data = roleData[state.selectedTask];
+            if (!data) {
+                return;
+            }
+            state.vars = {};
+
+            let first = true;
+            for (const [key, val] of Object.entries(data.vars)) {
+                const isMulti = key.endsWith('__multi');
+                const isSingle = key.endsWith('__single');
+                const label = key.replace('__multi', '').replace('__single', '');
+
+                const item = document.createElement('div');
+                item.className = 'accordion-item' + (first ? ' active' : '');
+                first = false;
+
+                const header = document.createElement('div');
+                header.className = 'accordion-header';
+                const summary = Array.isArray(val) ? val[0] : val;
+                header.innerHTML = `<div class="title-group"><div class="label">${label}</div><div class="summary" id="sum-${key}">${summary}</div></div><div class="accordion-icon">▼</div>`;
+
+                const content = document.createElement('div');
+                content.className = 'accordion-content';
+
+                if ((isMulti || isSingle) && Array.isArray(val)) {
+                    const cont = document.createElement('div');
+                    cont.className = 'multi-select-container';
+                    state.vars[key] = val[0];
+                    val.forEach((v) => {
+                        const chip = document.createElement('div');
+                        chip.className = 'chip' + (v === val[0] ? ' selected' : '');
+                        chip.textContent = v;
+                        const isCtrl = v.includes('不指定') || v.includes('---') || v.startsWith('🚫');
+
+                        chip.onclick = (event) => {
+                            event.stopPropagation();
+                            if (isSingle) {
+                                Array.from(cont.children).forEach((c) => c.classList.remove('selected'));
+                                chip.classList.add('selected');
+                            } else if (isCtrl) {
+                                Array.from(cont.children).forEach((c) => c.classList.remove('selected'));
+                                chip.classList.add('selected');
+                            } else {
+                                Array.from(cont.children).forEach((c) => {
+                                    if (c.textContent.includes('不指定') || c.textContent.includes('---') || c.textContent.startsWith('🚫')) {
+                                        c.classList.remove('selected');
+                                    }
+                                });
+                                if (chip.classList.contains('selected') && Array.from(cont.children).filter((c) => c.classList.contains('selected')).length > 1) {
+                                    chip.classList.remove('selected');
+                                } else {
+                                    chip.classList.add('selected');
+                                }
+                            }
+                            const resVal = Array.from(cont.children)
+                                .filter((c) => c.classList.contains('selected'))
+                                .map((c) => c.textContent)
+                                .join('、');
+                            state.vars[key] = resVal;
+                            document.getElementById(`sum-${key}`).textContent = resVal;
+                            updateResult();
+                        };
+                        cont.appendChild(chip);
+                    });
+                    content.appendChild(cont);
+                } else if (Array.isArray(val)) {
+                    const sel = document.createElement('select');
+                    val.forEach((v) => sel.add(new Option(v, v)));
+                    sel.onchange = (event) => {
+                        state.vars[key] = event.target.value;
+                        document.getElementById(`sum-${key}`).textContent = event.target.value;
+                        updateResult();
+                    };
+                    state.vars[key] = val[0];
+                    content.appendChild(sel);
+                } else {
+                    const inp = document.createElement('input');
+                    inp.type = 'text';
+                    inp.value = val;
+                    inp.oninput = (event) => {
+                        state.vars[key] = event.target.value;
+                        document.getElementById(`sum-${key}`).textContent = event.target.value;
+                        updateResult();
+                    };
+                    state.vars[key] = val;
+                    content.appendChild(inp);
+                }
+
+                header.onclick = () => {
+                    const now = item.classList.contains('active');
+                    document.querySelectorAll('.accordion-item').forEach((el) => el.classList.remove('active'));
+                    if (!now) {
+                        item.classList.add('active');
+                    }
+                };
+
+                item.appendChild(header);
+                item.appendChild(content);
+                $E.dynamic.appendChild(item);
+            }
+            updateResult();
+        }
+
+        function updateResult() {
+            try {
+                const task = state.rolesData[state.selectedRole][state.selectedTask];
+                let prompt = task.template;
+                for (const [key, value] of Object.entries(state.vars)) {
+                    prompt = prompt.replace(new RegExp(`\\{${key}\\}`, 'g'), value);
+                }
+                $E.result.value = state.modePrefix + prompt;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        function copyToClipboard() {
+            navigator.clipboard.writeText($E.result.value).then(() => {
+                const s = UI[state.lang];
+                $E.copy.classList.add('success');
+                document.getElementById('btn-copy-text').textContent = s.btn_copied;
+                setTimeout(() => {
+                    $E.copy.classList.remove('success');
+                    document.getElementById('btn-copy-text').textContent = s.btn_copy;
+                }, 2000);
+            });
+        }
+
+        function applyTheme(theme) {
+            state.theme = theme;
+            localStorage.setItem('cp_theme', theme);
+            document.body.setAttribute('data-theme', theme);
+        }
+
+        function toggleTheme() {
+            applyTheme(state.theme === 'light' ? 'dark' : 'light');
+        }
+
+        function updateStatus(online) {
+            const s = UI[state.lang];
+            $E.status.innerHTML = `<span class="status-dot" style="background:${online ? '#10b981' : '#ef4444'}"></span> ${online ? s.status_online : s.status_offline}`;
+        }
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').catch(err => console.debug('SW register failed', err));
+                const swUrl = new URL('sw.js', location.href);
+                navigator.serviceWorker.register(swUrl, { scope: BASE_PATH }).catch((err) => console.debug('SW register failed', err));
             });
         }
+
+        window.onload = init;
     </script>
 </body>
 

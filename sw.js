@@ -1,12 +1,21 @@
-const CACHE_NAME = 'prompt-copilot-v1';
-const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.webmanifest'
-];
+const CACHE_NAME = 'prompt-copilot-v2';
+
+function getBasePath() {
+  return self.registration.scope;
+}
+
+function getShellAssets() {
+  const base = getBasePath();
+  return [
+    base,
+    `${base}index.html`,
+    `${base}manifest.webmanifest`,
+    `${base}icons/icon.svg`
+  ];
+}
 
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)));
+  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(getShellAssets())));
   self.skipWaiting();
 });
 
