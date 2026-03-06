@@ -1,0 +1,9 @@
+{
+  "name": "ai_prompt_copilot",
+  "version": "0.1.0",
+  "private": true,
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "fetch-gists": "node scripts/fetch_gists.js"
+  }
+}
